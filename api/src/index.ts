@@ -1,10 +1,14 @@
 import express from 'express'
 import multer from 'multer'
+import cors from 'cors'
 
 const app = express()
 // file handler
 const upload = multer({dest: 'uploads/'})
 const PORT = 3000
+
+// frontend runs on a different port, so the browser blocks requests without CORS
+app.use(cors({ origin: 'http://localhost:5173' }))
 
 app.get('/health', (req, res) => {
     res.json({"status": "ok"})
