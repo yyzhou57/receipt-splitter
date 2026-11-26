@@ -2,43 +2,43 @@ name: CI
 
 on:
   push:
-  pull: request:
+  pull_request:
 
 jobs:
   # Frontend
   web:
     # Fresh Linux machine provided by github
-    runs=on: ubuntu-latest
+    runs-on: ubuntu-latest
     # Run every step from instide the web/ folder
     defaults:
       run:
         working-directory: web
-      steps:
-        # Download repo's code to machine
-        - uses: actions/checkout@v4
-        # Install node 24
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 24
-        # Install dependencies from package-lock.json
-        - run: npm CI
-        # Check code style and errors
-        - run: npm run lint
-        # Type=check and built the production bundle
-        - run: npm run build
+    steps:
+      # Download repo's code to machine
+      - uses: actions/checkout@v4
+      # Install node 24
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Install dependencies from package-lock.json
+      - run: npm ci
+      # Check code style and errors
+      - run: npm run lint
+      # Type-check and built the production bundle
+      - run: npm run build
   # Backend
   api:
     runs-on: ubuntu-latest
     defaults:
       run: 
         working-directory: api
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 24
-        - run: npm ci
-        # Compile Typescript, fails if there are any type errors
-        - run: npm run build
-        # Prove the dockerfile still builds
-        - run: docker build -t recept-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      # Compile Typescript, fails if there are any type errors
+      - run: npm run build
+      # Prove the dockerfile still builds
+      - run: docker build -t receipt-api . 
